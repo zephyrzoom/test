@@ -10,15 +10,13 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    alwaysOnTop: true,
     frame: false,
-    transparent: true
-
+    transparent: true,
   })
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
-
+  mainWindow.setAlwaysOnTop(true);
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
