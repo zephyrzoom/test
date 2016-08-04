@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script>
+        window.onload = () => {
+            const audio = document.getElementById('music');
+            const check = document.getElementById('check');
+            check.addEventListener('click', () => {
+                if (!audio.paused) {
+                    alert('playing');
+                } else {
+                    alert('paused');
+                }
+            })
+
+        };
+        </script>
+    </head>
+    <body>
+        <audio id="music" autoplay controls src="http://m2.music.126.net/fzxb9-94aH0yYp8l-s6UvQ==/3250156383168327.mp3"></audio>
+        <button id="check">check</button>
+    </body>
+</html>
