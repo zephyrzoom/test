@@ -18,8 +18,8 @@
 <span class="refresh-icon"></span>
 <div id="allmap"></div>
 <div id="comment">
-    <input id="comment-text"/>
-    <input id="comment-button" type="button" value="发布"/>
+    <input class="comment-text"/>
+    <input class="comment-button" type="button" value="发布"/>
 </div>
 <div id="comment-detail">
     <div class="container">
@@ -35,8 +35,8 @@
         </div>
 
         <hr class="line2">
-        <input id="do-comment-reply"/>
-        <input id="reply-submit-button" type="button" value="评论" onclick="javascript:closeReply()"/>
+        <input class="close-replys"/>
+        <input class="comment-button" type="button" value="评论" onclick="javascript:closeReply()"/>
     </div>
 </div>
 </body>
@@ -236,7 +236,7 @@
     }
     $(document).ready(function () {
         refresh_static();
-        
+
         $(".refresh-icon").click(function () {
             console.log(123)
             refresh_static();
