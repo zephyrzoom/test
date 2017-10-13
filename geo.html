@@ -4,25 +4,30 @@
 <meta charset="utf-8">
 <script src="jquery.js"></script>
 <script>
+if (navigator.geolocation) {
+    console.info(navigator.geolocation);
+} else {
+    console.log('你的浏览器不支持地理定位');
+}
 var options = {
     enableHighAccuracy: true,
     timeout: 5000,
     maximumAge: 0
   };
-  
+
   function success(pos) {
     var crd = pos.coords;
-  
+
     alert('Your current position is:');
     alert(`Latitude : ${crd.latitude}`);
     alert(`Longitude: ${crd.longitude}`);
     alert(`More or less ${crd.accuracy} meters.`);
   };
-  
+
   function error(err) {
     alert(`ERROR(${err.code}): ${err.message}`);
   };
-  
+
   navigator.geolocation.getCurrentPosition(success, error, options);
 </script>
 </head>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=U1A35c828hK6MLZYv81trGiL"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <title>匿名留言墙</title>
+    <script src="../map_1013/map.js"></script>
+</head>
+<body>
+<div class="title-bar">
+    <span class="title-x">X</span>
+    <span class="title-text">匿名留言墙</span>
+    <span class="share"><img src="./images/share@1x.png"></span>
+</div>
+<span class="refresh-icon"></span>
+<div id="allmap"></div>
+<div id="comment">
+    <input id="comment-text"/>
+    <input id="comment-button" type="button" value="发布"/>
+</div>
+<div id="comment-detail">
+    <div class="container">
+        <span class="comment1">很好吃！</span>
+        <span class="close-replys" type="button">X</span>
+        <hr class="line1">
+        <div class="comment-list">
+            <div class="comment_replys">很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！</div>
+            <div class="comment_replys">很好吃！很好吃！很好吃！很好吃！</div>
+            <div class="comment_replys">很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！</div>
+            <div class="comment_replys">很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！</div>
+            <div class="comment_replys">很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！很好吃！</div>
+        </div>
+
+        <hr class="line2">
+        <input id="do-comment-reply"/>
+        <input id="reply-submit-button" type="button" value="评论" onclick="javascript:closeReply()"/>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    function refresh() {
+        var currentPosition = {
+            longitude : "109.048895", //经度
+            latitude : "34.311102" //纬度
+        }
+        // 百度地图API功能
+        var mp = new BMap.Map("allmap");
+        mp.centerAndZoom(new BMap.Point(currentPosition.longitude, currentPosition.latitude), 14);
+        mp.enableScrollWheelZoom();
+        // 复杂的自定义覆盖物
+        function ComplexCustomOverlay(point, text, tylecolor,likecount) {
+            this._point = point;
+            this._text = text;
+            this._tylecolor = tylecolor;
+            this._likecount=likecount;
+        }
+
+        ComplexCustomOverlay.prototype = new BMap.Overlay();
+        ComplexCustomOverlay.prototype.initialize = function (map) {
+            this._map = map;
+
+            var div = this._div = document.createElement("div");
+            div.style.position = "absolute";
+            div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
+            // div.style.backgroundColor = "#EE5D5B";
+            div.style.backgroundColor = "#ffffff";
+            div.style.border = "1px solid " + this._tylecolor;
+            div.style.color = this._tylecolor;
+            div.style.height = "24px";
+            div.style.padding = "2px ";
+            div.style.lineHeight = "24px";
+            div.style.whiteSpace = "nowrap";
+            div.style.MozUserSelect = "none";
+            div.style.fontSize = "15px";
+            div.style.borderRadius = "18px";
+            var span = this._span = document.createElement("span");
+            span.style.marginLeft = "12px";
+            span.style.marginRight = "12px";
+            div.appendChild(span);
+            span.appendChild(document.createTextNode(this._text));
+            var that = this;
+
+
+            var arrow = this._arrow = document.createElement("div");
+            arrow.style.background = "url(./images/triangleRed@1x.png) no-repeat";
+            arrow.style.position = "absolute";
+            arrow.style.width = "11px";
+            arrow.style.height = "10px";
+            arrow.style.top = "30px";
+            arrow.style.left = "25px";
+            div.appendChild(arrow);
+
+
+            mp.getPanes().labelPane.appendChild(div);
+
+            return div;
+        }
+        ComplexCustomOverlay.prototype.draw = function () {
+            var map = this._map;
+            var pixel = map.pointToOverlayPixel(this._point);
+            this._div.style.left = pixel.x - parseInt(this._arrow.style.left) + "px";
+            this._div.style.top = pixel.y - 30 + "px";
+        }
+        var class1Color = "#7cbb09";
+        var class2Color = "#f69090";
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/mdm-web/getcommentsnearby.action",
+            data: JSON.stringify(currentPosition),
+            dataType: "json",
+            success: data => {
+                console.log(data);
+                if (data.stat == "0000") {
+                    for (item of data.result) {
+                        let myCompOverlay = new ComplexCustomOverlay(new BMap.Point(item.longitude, item.latitude),
+                            item.content, item.praiseNum > 50 ? class2Color : class1Color,item.praiseNum);
+                        mp.addOverlay(myCompOverlay);
+                    }
+                }
+            }
+        });
+    }
+
+    function refresh_static(){
+
+
+
+// 百度地图API功能
+        var mp = new BMap.Map("allmap");
+        mp.centerAndZoom(new BMap.Point(109.048895,34.311102), 14);
+        mp.enableScrollWheelZoom();
+// 复杂的自定义覆盖物
+        function ComplexCustomOverlay(point, text, tylecolor,likecount) {
+            this._point = point;
+            this._text = text;
+            this._tylecolor = tylecolor;
+            this._likecount=likecount;
+        }
+        ComplexCustomOverlay.prototype = new BMap.Overlay();
+        ComplexCustomOverlay.prototype.initialize = function(map){
+            this._map = map;
+
+            var div = this._div = document.createElement("div");
+            div.style.position = "absolute";
+            div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
+            // div.style.backgroundColor = "#EE5D5B";
+            div.style.backgroundColor = "#ffffff";
+            div.style.border = "1px solid "+this._tylecolor;
+            div.style.color = this._tylecolor;
+            div.style.height = "24px";
+            div.style.padding = "3px ";
+            div.style.lineHeight = "24px";
+            div.style.whiteSpace = "nowrap";
+            div.style.MozUserSelect = "none";
+            div.style.fontSize = "15px";
+            div.style.borderRadius = "18px";
+            var span = this._span = document.createElement("span");
+            span.style.marginLeft ="12px";
+            span.style.marginRight ="55px";
+            div.appendChild(span);
+            span.appendChild(document.createTextNode(this._text));
+
+            var span_zan = this._span = document.createElement("img");
+            span_zan.src = "./images/likeRed@1x.png";
+            if(this._tylecolor=="#7cbb09"){
+                span_zan.src = "./images/likeGray@1x.png";
+            }
+            span_zan.style.position = "absolute";
+            span_zan.style.width = "22px";
+            span_zan.style.height = "22px";
+            span_zan.style.marginLeft="5px";
+            span.appendChild(span_zan);
+
+            var span_zan_count = this._span = document.createElement("span");
+            span_zan_count.style.position = "absolute";
+            span_zan_count.style.width = "22px";
+            span_zan_count.style.height = "22px";
+            span_zan_count.style.paddingLeft ="30px";
+            span_zan_count.style.color="#999999"
+            span.appendChild(span_zan_count);
+            span_zan_count.appendChild(document.createTextNode(this._likecount));
+            var that = this;
+
+
+            var arrow = this._arrow = document.createElement("div");
+            arrow.style.background = "url(./images/triangleRed@1x.png) no-repeat";
+            if(this._tylecolor=="#7cbb09"){
+                arrow.style.background = "url(./images/triangle@1x.png) no-repeat";
+            }
+            arrow.style.position = "absolute";
+            arrow.style.width = "13px";
+            arrow.style.height = "12px";
+            arrow.style.top = "30px";
+            arrow.style.left = "25px";
+            div.appendChild(arrow);
+
+
+
+            mp.getPanes().labelPane.appendChild(div);
+
+            return div;
+        }
+        ComplexCustomOverlay.prototype.draw = function(){
+            var map = this._map;
+            var pixel = map.pointToOverlayPixel(this._point);
+            this._div.style.left = pixel.x - parseInt(this._arrow.style.left) + "px";
+            this._div.style.top  = pixel.y - 28 + "px";
+        }
+        var txt = "中国银行棒棒哒!!!!!!!!";
+        var txt2= "很好吃！";
+        var class2Color="#7cbb09";
+        var class1Color="#f69090";
+
+        var myCompOverlay1 = new ComplexCustomOverlay(new BMap.Point(109.038895,34.311102),
+            txt2,class1Color,56);
+        var myCompOverlay2 = new ComplexCustomOverlay(new BMap.Point(109.047895,34.321102),
+            txt,class2Color,12);
+//        var myCompOverlay3 = new ComplexCustomOverlay(new BMap.Point(109.048895,34.302102),
+//            txt2,class1Color);
+//        var myCompOverlay4 = new ComplexCustomOverlay(new BMap.Point(109.048695,34.311702),
+//            txt,class2Color);
+//        var myCompOverlay5 = new ComplexCustomOverlay(new BMap.Point(109.058190,34.311102),
+//            txt2,class1Color);
+
+        mp.addOverlay(myCompOverlay1);
+        mp.addOverlay(myCompOverlay2);
+//        mp.addOverlay(myCompOverlay3);
+//        mp.addOverlay(myCompOverlay4);
+//        mp.addOverlay(myCompOverlay5);
+
+    }
+    $(document).ready(function () {
+        refresh_static();
+        
+        $(".refresh-icon").click(function () {
+            console.log(123)
+            refresh_static();
+        });
+
+        //////////////////////////////////////////////
+
+        $(".close-replys").click(function () {
+            $("#comment-detail").hide();
+        });
+
+        $("#comment-button").click(function () {
+            var comment = {
+                content: $("#comment-text").val(),
+                longitude: "088.12345677890",
+                latitude: "011.12345678901"
+            };
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/mdm-web/commitcomment.action",
+                data: JSON.stringify(comment),
+                dataType: "json",
+                success: data => {
+                    console.log(data);
+                    if (data.stat == "0000") {
+                        var myCompOverlay = new ComplexCustomOverlay(new BMap.Point(comment.longitude, comment.latitude),
+                            comment.content, class1Color);
+                        mp.addOverlay(myCompOverlay);
+                    }
+                }
+            });
+            console.log(comment);
+        });
+    });
+</script>
