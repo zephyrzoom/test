@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="jquery.js"></script>
+<script>
+var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+  };
+  
+  function success(pos) {
+    var crd = pos.coords;
+  
+    alert('Your current position is:');
+    alert(`Latitude : ${crd.latitude}`);
+    alert(`Longitude: ${crd.longitude}`);
+    alert(`More or less ${crd.accuracy} meters.`);
+  };
+  
+  function error(err) {
+    alert(`ERROR(${err.code}): ${err.message}`);
+  };
+  
+  navigator.geolocation.getCurrentPosition(success, error, options);
+</script>
+</head>
+<body>
+
+<div id="myDiv"><h2>使用 AJAX 修改该文本内容</h2></div>
+<button type="button">修改内容</button>
+
+</body>
+</html>
