@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/Users/zzq7191/Documents/py3/bin/python"
+    "python.venvPath": "/home/zeek/Documents/test/py/py3",
+    "python.pythonPath": "py3/bin/python"
 }
