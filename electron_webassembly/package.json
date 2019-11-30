@@ -1,0 +1,19 @@
+{
+  "name": "electron_webassembly",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^6.0.12",
+    "webassembly": "file:./webassembly/pkg"
+  },
+  "dependencies": {
+    "create-wasm-app": "^0.1.0"
+  }
+}
